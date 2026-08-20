@@ -203,10 +203,10 @@ function App() {
               <div className="contact-card">
                 <p>Estoy disponible para proyectos freelance, colaboraciones y oportunidades profesionales.</p>
                 <ul className="contact-list">
-                  <li><span className="icon">📧</span> tuemail@email.com</li>
-                  <li><span className="icon">📞</span> +52 555 123 4567</li>
-                  <li><span className="icon">📍</span> Ciudad, País</li>
-                  <li><span className="icon">💼</span> linkedin.com/in/tuusuario</li>
+                  <li><span className="icon">📧</span> contrerashugo447gm@gmail.com</li>
+                  <li><span className="icon">📞</span> +58 4246754787</li>
+                  <li><span className="icon">📍</span> Maracaibo, Venezuela</li>
+                  <li><span className="icon">💼</span> https://www.linkedin.com/in/hugo-santiago-contreras-ortega-5030033ab/</li>
                 </ul>
               </div>
 
