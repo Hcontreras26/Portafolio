@@ -223,9 +223,7 @@ function App() {
                 />
 
                 {/* Circular Rotating Download CV Badge */}
-                <motion.a
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.92 }}
+                <a
                   href="/assets/cv.pdf"
                   download="Hugo_Contreras_CV.pdf"
                   className="scroll-down-badge"
@@ -245,7 +243,7 @@ function App() {
                     </text>
                   </svg>
                   <Download size={24} className="download-badge-icon" />
-                </motion.a>
+                </a>
               </motion.div>
             </div>
           </div>
