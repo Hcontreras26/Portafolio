@@ -217,7 +217,6 @@ function App() {
       <header className="topbar">
         <div className="container nav-wrap">
           <a href="#inicio" className="logo">
-            <Sparkles size={20} className="logo-sparkle" />
             Hugo<span>Contreras</span>
           </a>
 
