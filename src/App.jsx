@@ -1,173 +1,468 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Sun,
+  Moon,
+  Download,
+  Eye,
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Loader2,
+  CheckCircle2,
+  Code2,
+  Sparkles,
+  Smartphone,
+  BarChart3,
+  Briefcase,
+  X,
+  Menu,
+  Terminal,
+  Layers,
+  Palette,
+  ExternalLink,
+  GraduationCap,
+  Database,
+  Server,
+  Globe
+} from 'lucide-react';
 import hugPhoto from '../assets/Hug.jpg';
+import hugoLaptopImg from '../assets/hugo-laptop.png';
+import wsiImg from '../assets/wsi-project.png';
+import lakatuarImg from '../assets/lakatuar-project.png';
+import reporteImg from '../assets/reporte-latinoamerica-project.png';
 
-const skills = ['HTML5', 'CSS3', 'JavaScript', 'React', 'Responsive Design', 'UI/UX', 'Git', 'Figma'];
+const technicalSkills = [
+  'Python',
+  'TypeScript',
+  'JavaScript',
+  'React & Vite',
+  'Next.js',
+  'Django / DRF',
+  'PostgreSQL',
+  'MySQL',
+  'SQL',
+  'Node.js',
+  'Tailwind CSS',
+  'WordPress',
+  'Git & GitHub',
+  'REST APIs',
+  'UI/UX'
+];
 
 const projects = [
   {
-    icon: '📱',
-    title: 'App de Gestión',
-    description: 'Plataforma web para administrar tareas, clientes y reportes con una interfaz intuitiva.',
-    tags: ['React', 'CSS', 'API'],
+    image: wsiImg,
+    title: 'WSI – Gestión de Flota & Mantenimiento',
+    subtitle: 'World Service International',
+    description: 'Plataforma web para la gestión centralizada de vehículos, mantenimientos preventivos y correctivos, control documental y reporte de fallas.',
+    tags: ['React + Vite', 'Django REST', 'PostgreSQL', 'UI/UX'],
   },
   {
-    icon: '🛒',
-    title: 'E-commerce',
-    description: 'Tienda digital con diseño atractivo, carrito de compras y optimización para móviles.',
-    tags: ['HTML', 'JS', 'UX'],
+    image: lakatuarImg,
+    title: 'La Katuar News',
+    subtitle: 'Portal de Medios & Streaming',
+    description: 'Plataforma web multimedia construida con TypeScript y Next.js para transmisión en vivo, cobertura de noticias y programación audiovisual interactiva.',
+    tags: ['TypeScript', 'Next.js / React', 'Tailwind CSS', 'Streaming & APIs'],
   },
   {
-    icon: '📊',
-    title: 'Dashboard Analítico',
-    description: 'Panel de métricas con visualización clara de KPIs para toma de decisiones rápidas.',
-    tags: ['Charts', 'UI', 'Performance'],
+    image: reporteImg,
+    title: 'Reporte Latinoamérica',
+    subtitle: 'Medio de Comunicación Digital',
+    description: 'Portal informativo de alcance internacional con arquitectura escalable de contenidos, estrategias SEO técnico y distribución de noticias en tiempo real.',
+    tags: ['WordPress', 'SEO Técnico', 'JavaScript', 'Web Performance'],
   },
 ];
 
 const jobs = [
   {
-    role: 'Frontend Developer',
-    place: 'Empresa X · 2023 - Actual',
-    text: 'Desarrollo interfaces responsivas, optimización de rendimiento y colaboración con equipos de diseño.',
+    role: 'Community Manager & Digital Operations',
+    place: 'Rainbet · 2024 - 2026',
+    text: 'Gestión técnica de comunidades digitales y moderación avanzada de plataformas automatizadas. Análisis de métricas de engagement y optimización de flujos estructurales de comunicación corporativa.',
   },
   {
-    role: 'Diseñador Web',
-    place: 'Agencia Y · 2021 - 2023',
-    text: 'Diseño visual y prototipado para proyectos corporativos, landing pages y campañas digitales.',
+    role: 'Content Engineer / Esp. Publicación Digital',
+    place: 'Reportes Latinoamérica · 2022 - 2025',
+    text: 'Administré y optimicé sitios WordPress orientados a medios digitales, implementando estrategias SEO y mejoras de rendimiento para aumentar la velocidad de publicación y visibilidad del contenido.',
   },
   {
-    role: 'Freelance',
-    place: '2020 - 2021',
-    text: 'Atención a clientes para la creación de sitios web, branding y piezas digitales.',
+    role: 'Representante de Ventas',
+    place: 'Nelsongalletas · 2023 - 2025',
+    text: 'Gestión controlada de cartera de clientes estratégicos y optimización de procesos logísticos de venta directa.',
+  },
+  {
+    role: 'Agente de Call Center & Soluciones',
+    place: 'Data Center · 2018 - 2021',
+    text: 'Venta consultiva especializada de soluciones y enlace dinámico directo entre los requerimientos de arquitectura del cliente y las capacidades de infraestructura del centro de datos.',
   },
 ];
 
-const navItems = ['Sobre mí', 'Proyectos', 'Experiencia', 'Contacto'];
+const navItems = [
+  { name: 'Sobre mí', href: '#sobre-mi' },
+  { name: 'Proyectos', href: '#proyectos' },
+  { name: 'Experiencia', href: '#experiencia' },
+  { name: 'Contacto', href: '#contacto' },
+];
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+  }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+};
 
 function App() {
   const currentYear = new Date().getFullYear();
 
+  // Dark/Light Mode state
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) return savedTheme;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  });
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState({
+    show: false,
+    title: '',
+    message: '',
+    type: 'success'
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      setToast({
+        show: true,
+        title: 'Campos incompletos',
+        message: 'Por favor, completa todos los campos antes de enviar.',
+        type: 'error'
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1400));
+      setFormData({ name: '', email: '', message: '' });
+      setToast({
+        show: true,
+        title: '¡Mensaje enviado con éxito!',
+        message: 'Gracias por escribir. Me pondré en contacto contigo a la brevedad.',
+        type: 'success'
+      });
+    } catch {
+      setToast({
+        show: true,
+        title: 'Error al enviar',
+        message: 'Hubo un problema al enviar tu mensaje. Inténtalo de nuevo.',
+        type: 'error'
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  useEffect(() => {
+    if (toast.show) {
+      const timer = setTimeout(() => {
+        setToast((prev) => ({ ...prev, show: false }));
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast.show]);
+
   return (
     <div className="page-shell">
+      {/* Navigation Topbar */}
       <header className="topbar">
         <div className="container nav-wrap">
           <a href="#inicio" className="logo">
+            <Sparkles size={20} className="logo-sparkle" />
             Hugo<span>Contreras</span>
           </a>
-          <nav className="menu" aria-label="Navegación principal">
-            {navItems.map((item) => {
-              const id = item.toLowerCase().replace(/\s+/g, '-');
-              return (
-                <a key={item} href={`#${id}`}>
-                  {item}
+
+          <div className="nav-right">
+            <nav className={`menu ${mobileMenuOpen ? 'mobile-open' : ''}`} aria-label="Navegación principal">
+              {navItems.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item.name}
                 </a>
-              );
-            })}
-          </nav>
+              ))}
+            </nav>
+
+            {/* Dark Mode Toggle */}
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              whileHover={{ scale: 1.08 }}
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+              title={theme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}
+            >
+              {theme === 'dark' ? (
+                <Sun size={19} className="theme-icon sun" />
+              ) : (
+                <Moon size={19} className="theme-icon moon" />
+              )}
+            </motion.button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="mobile-menu-btn"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Abrir menú de navegación"
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </header>
 
       <main>
+        {/* Hero Section */}
         <section id="inicio" className="hero">
           <div className="container hero-banner">
-            <div className="hero-text">
-              <p className="eyebrow">Software Engineer</p>
-              <h1>
-                <span className="name-line">Hugo Contreras</span>
-                <br />
-                I'M A <span>SOFTWARE</span>
-                <br />
-                ENGINEER
-              </h1>
-            </div>
+            <motion.div
+              className="hero-text"
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
+            >
+              <motion.div variants={fadeInUp}>
+                <span className="eyebrow-badge">
+                  <Terminal size={14} /> Ingeniero en Informática · Fullstack & Backend
+                </span>
+              </motion.div>
 
-            <div className="photo-wrap">
-                <img
-                  className="profile-photo"
-                  src={hugPhoto}
-                  alt="Hugo Contreras"
-                />
-            </div>
+              <motion.h1 variants={fadeInUp}>
+                <span className="name-line">Hugo Santiago Contreras</span>
+                SOFTWARE <span className="highlight">ENGINEER</span>
+                <br />
+                & DEVELOPER
+              </motion.h1>
+            </motion.div>
 
-            <div className="actions hero-actions">
-              <a href="/assets/cv.pdf" className="btn btn-primary" download>
-                Descargar CV
-              </a>
-              <a href="#proyectos" className="btn btn-secondary">
+            <motion.div
+              className="photo-wrap"
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <img
+                className="profile-photo"
+                src={hugPhoto}
+                alt="Hugo Santiago Contreras Ortega"
+              />
+            </motion.div>
+
+            <motion.div
+              className="actions hero-actions"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href="/assets/cv.pdf"
+                className="btn btn-primary"
+                download="Hugo_Contreras_CV.pdf"
+                title="Descargar Curriculum Vitae en PDF"
+              >
+                <Download size={18} />
+                Descargar CV (PDF)
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                href="#proyectos"
+                className="btn btn-secondary"
+              >
+                <Eye size={18} />
                 Ver proyectos
-              </a>
-            </div>
+              </motion.a>
+            </motion.div>
           </div>
         </section>
 
-        <section id="sobre-mi">
+        {/* About Me Section */}
+        <motion.section
+          id="sobre-mi"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={fadeInUp}
+        >
           <div className="container">
-            <div className="section-header">
-              <span className="eyebrow">Sobre mí</span>
-              <h2>Diseño soluciones con enfoque en resultados</h2>
-            </div>
+            <div className="about-showcase">
+              <div className="about-content">
+                <span className="about-eyebrow">HOLA</span>
+                <h2 className="about-title">Soy Hugo Contreras</h2>
 
-            <div className="about-grid">
-              <div className="about-box">
-                <p>
-                  Soy un desarrollador web con experiencia en la creación de interfaces modernas, rápidas y accesibles.
-                  Me encanta transformar ideas en productos digitales que conecten con las personas y generen valor real
-                  para negocios y usuarios.
+                <p className="about-desc">
+                  <strong>Ingeniero en Informática</strong> egresado de la <strong>Universidad Rafael Belloso Chacín (URBE)</strong>. Me especializo en la concepción y desarrollo de ecosistemas digitales completos, uniendo arquitecturas de backend eficientes (<strong>Python / Django, Node.js</strong>) con interfaces de usuario modernas, reactivas y accesibles (<strong>React, TypeScript, JavaScript</strong>).
                 </p>
-                <p>
-                  Mi trabajo combina diseño visual, experiencia de usuario y desarrollo frontend para construir proyectos
-                  funcionales, escalables y con una excelente estética.
-                </p>
-              </div>
 
-              <div className="about-box">
-                <h3>Habilidades principales</h3>
+                <p className="about-desc">
+                  Me defino como un profesional autodidacta, analítico y disciplinado, enfocado en aportar valor estratégico a través de código limpio, automatización de procesos y arquitecturas altamente escalables.
+                </p>
+
+                <div className="skills-divider">Habilidades Técnicas</div>
                 <div className="skills">
-                  {skills.map((skill) => (
-                    <span key={skill}>{skill}</span>
+                  {technicalSkills.map((skill) => (
+                    <motion.span
+                      whileHover={{ scale: 1.06 }}
+                      className="skill-tag"
+                      key={skill}
+                    >
+                      <Code2 size={13} />
+                      {skill}
+                    </motion.span>
                   ))}
                 </div>
               </div>
+
+              <motion.div
+                className="about-photo-wrapper"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <div className="about-photo-card">
+                  <img
+                    src={hugoLaptopImg}
+                    alt="Hugo Santiago Contreras Ortega"
+                    className="about-photo-img"
+                  />
+                </div>
+              </motion.div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section id="proyectos">
+        {/* Projects Section */}
+        <motion.section
+          id="proyectos"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={fadeInUp}
+        >
           <div className="container">
             <div className="section-header">
-              <span className="eyebrow">Proyectos</span>
-              <h2>Trabajos que destacan mi enfoque</h2>
+              <span className="eyebrow-badge">
+                <Code2 size={14} /> Proyectos Destacados
+              </span>
+              <h2>Soluciones construidas con impacto</h2>
+              <p>Proyectos de software aplicados a la gestión operativa, datos y plataformas digitales.</p>
             </div>
 
             <div className="projects-grid">
-              {projects.map((project) => (
-                <article className="project-card" key={project.title}>
-                  <div className="project-image">{project.icon}</div>
-                  <div className="project-info">
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                    <div className="project-tags">
-                      {project.tags.map((tag) => (
-                        <span key={tag}>{tag}</span>
-                      ))}
+              {projects.map((project, index) => {
+                return (
+                  <motion.article
+                    className="project-card"
+                    key={project.title}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.12 }}
+                  >
+                    <div className="project-image-box">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="project-img"
+                        loading="lazy"
+                      />
+                      <div className="project-overlay"></div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                    <div className="project-info">
+                      <span style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 700, marginBottom: '0.2rem' }}>
+                        {project.subtitle}
+                      </span>
+                      <h3>{project.title}</h3>
+                      <p>{project.description}</p>
+                      <div className="project-tags">
+                        {project.tags.map((tag) => (
+                          <span key={tag}>{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.article>
+                );
+              })}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section id="experiencia">
+        {/* Experience Section */}
+        <motion.section
+          id="experiencia"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={fadeInUp}
+        >
           <div className="container">
             <div className="section-header">
-              <span className="eyebrow">Experiencia</span>
-              <h2>Mi trayectoria profesional</h2>
+              <span className="eyebrow-badge">
+                <Briefcase size={14} /> Experiencia Laboral
+              </span>
+              <h2>Mi trayectoria y roles desempeñados</h2>
+              <p>Experiencia en operaciones digitales, ingeniería de contenidos y soluciones técnicas.</p>
             </div>
 
             <div className="experience-grid">
               <div className="card timeline">
                 {jobs.map((job) => (
                   <div className="job" key={job.role}>
+                    <div className="job-bullet"></div>
                     <h3>{job.role}</h3>
                     <div className="meta">{job.place}</div>
                     <p>{job.text}</p>
@@ -176,61 +471,234 @@ function App() {
               </div>
 
               <div className="card">
-                <h3>¿Qué ofrezco?</h3>
+                <h3>¿Qué valor aporto?</h3>
                 <p>
-                  Desarrollo de soluciones web modernas, interfaces amigables, experiencia de usuario cuidada y atención a
-                  cada detalle visual para mejorar la percepción de tu marca.
+                  Capacidad integral para abordar proyectos desde la concepción y modelado de bases de datos hasta la creación de interfaces interactivas y automatización de procesos.
                 </p>
-                <ul className="contact-list">
-                  <li><span className="icon">✅</span> Sitios web modernos</li>
-                  <li><span className="icon">✅</span> Diseño responsive</li>
-                  <li><span className="icon">✅</span> Optimización UX/UI</li>
-                  <li><span className="icon">✅</span> Mantenimiento y mejoras</li>
+                <ul className="offerings-list">
+                  <li>
+                    <span className="offering-icon"><CheckCircle2 size={18} /></span>
+                    Desarrollo backend robusto en Python (Django / DRF / Scripts)
+                  </li>
+                  <li>
+                    <span className="offering-icon"><CheckCircle2 size={18} /></span>
+                    Interfaces web reactivas y accesibles con React + Vite
+                  </li>
+                  <li>
+                    <span className="offering-icon"><CheckCircle2 size={18} /></span>
+                    Modelado, consultas y optimización SQL (PostgreSQL & MySQL)
+                  </li>
+                  <li>
+                    <span className="offering-icon"><CheckCircle2 size={18} /></span>
+                    Administración, personalización y SEO para WordPress
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section id="contacto">
+        {/* Contact Section */}
+        <motion.section
+          id="contacto"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={fadeInUp}
+        >
           <div className="container">
             <div className="section-header">
-              <span className="eyebrow">Contacto</span>
-              <h2>Hablemos de tu próximo proyecto</h2>
+              <span className="eyebrow-badge">
+                <Mail size={14} /> Contacto
+              </span>
+              <h2>Hablemos de tu próximo proyecto o vacante</h2>
+              <p>Disponible para posiciones de Software Engineer, Backend / Frontend y proyectos a medida.</p>
             </div>
 
             <div className="contact-grid">
               <div className="contact-card">
-                <p>Estoy disponible para proyectos freelance, colaboraciones y oportunidades profesionales.</p>
+                <p>Puedes contactarme de forma directa a través de cualquiera de estos canales:</p>
                 <ul className="contact-list">
-                  <li><span className="icon">📧</span> contrerashugo447gm@gmail.com</li>
-                  <li><span className="icon">📞</span> +58 4246754787</li>
-                  <li><span className="icon">📍</span> Maracaibo, Venezuela</li>
-                  <li><span className="icon">💼</span> https://www.linkedin.com/in/hugo-santiago-contreras-ortega-5030033ab/</li>
+                  <li>
+                    <div className="icon-wrapper">
+                      <Mail size={19} />
+                    </div>
+                    <a href="mailto:contrerashug0447@gmail.com">
+                      contrerashug0447@gmail.com
+                    </a>
+                  </li>
+                  <li>
+                    <div className="icon-wrapper">
+                      <Phone size={19} />
+                    </div>
+                    <a href="tel:+584126754787">+58 412 6754787</a>
+                  </li>
+                  <li>
+                    <div className="icon-wrapper">
+                      <MapPin size={19} />
+                    </div>
+                    <span>Maracaibo, Venezuela</span>
+                  </li>
+                  <li>
+                    <div className="icon-wrapper">
+                      <svg
+                        width="19"
+                        height="19"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                        <rect x="2" y="9" width="4" height="12" />
+                        <circle cx="4" cy="4" r="2" />
+                      </svg>
+                    </div>
+                    <a
+                      href="https://www.linkedin.com/in/hugo-santiago-contreras-ortega-5030033ab/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                    >
+                      <span>LinkedIn / Hugo Santiago Contreras</span>
+                      <ExternalLink size={14} style={{ opacity: 0.7 }} />
+                    </a>
+                  </li>
+                  <li>
+                    <div className="icon-wrapper">
+                      <svg
+                        width="19"
+                        height="19"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                      </svg>
+                    </div>
+                    <a
+                      href="https://github.com/Hcontreras26"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                    >
+                      <span>GitHub / Hcontreras26</span>
+                      <ExternalLink size={14} style={{ opacity: 0.7 }} />
+                    </a>
+                  </li>
                 </ul>
               </div>
 
               <div className="contact-card">
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                  }}
-                >
-                  <input type="text" placeholder="Tu nombre" />
-                  <input type="email" placeholder="Tu correo" />
-                  <textarea placeholder="Escribe tu mensaje..."></textarea>
-                  <button type="submit" className="btn btn-primary">
-                    Enviar mensaje
-                  </button>
+                <form onSubmit={handleFormSubmit}>
+                  <div className="form-group">
+                    <label htmlFor="name">Nombre completo</label>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder="Tu nombre o empresa"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="email">Correo electrónico</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="tu@correo.com"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="message">Mensaje</label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      placeholder="Cuéntame sobre tu proyecto, propuesta u oportunidad laboral..."
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
+                      disabled={isSubmitting}
+                    ></textarea>
+                  </div>
+
+                  <motion.button
+                    whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+                    whileHover={!isSubmitting ? { scale: 1.02 } : {}}
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={isSubmitting}
+                    style={{ width: '100%', marginTop: '0.5rem' }}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 size={19} className="spin-icon" />
+                        <span>Enviando mensaje...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send size={18} />
+                        <span>Enviar mensaje</span>
+                      </>
+                    )}
+                  </motion.button>
                 </form>
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
       </main>
 
+      {/* Floating Toast Notification */}
+      <AnimatePresence>
+        {toast.show && (
+          <div className="toast-container">
+            <motion.div
+              className="toast"
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="toast-icon">
+                <CheckCircle2 size={24} />
+              </div>
+              <div className="toast-content">
+                <div className="toast-title">{toast.title}</div>
+                <div className="toast-message">{toast.message}</div>
+              </div>
+              <button
+                className="toast-close"
+                onClick={() => setToast((prev) => ({ ...prev, show: false }))}
+                aria-label="Cerrar notificación"
+              >
+                <X size={18} />
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer */}
       <footer>
-        <div className="container">© {currentYear} Mi Portafolio. Todos los derechos reservados.</div>
+        <div className="container">
+          © {currentYear} Hugo Santiago Contreras Ortega · Ingeniero en Informática. Todos los derechos reservados.
+        </div>
       </footer>
     </div>
   );
