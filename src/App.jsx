@@ -1,31 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Sun,
   Moon,
   Download,
   Eye,
   Mail,
-  Phone,
   MapPin,
-  Send,
-  Loader2,
-  CheckCircle2,
   Code2,
   Sparkles,
-  Smartphone,
-  BarChart3,
   Briefcase,
   X,
   Menu,
   Terminal,
   Layers,
-  Palette,
-  ExternalLink,
-  GraduationCap,
-  Database,
-  Server,
-  Globe
+  CheckCircle2,
+  Calendar,
+  MessageCircle
 } from 'lucide-react';
 import hugPhoto from '../assets/Hug.jpg';
 import hugoLaptopImg from '../assets/hugo-laptop.png';
@@ -139,20 +130,6 @@ function App() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Form State
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [toast, setToast] = useState({
-    show: false,
-    title: '',
-    message: '',
-    type: 'success'
-  });
-
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
@@ -161,55 +138,6 @@ function App() {
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setToast({
-        show: true,
-        title: 'Campos incompletos',
-        message: 'Por favor, completa todos los campos antes de enviar.',
-        type: 'error'
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1400));
-      setFormData({ name: '', email: '', message: '' });
-      setToast({
-        show: true,
-        title: '¡Mensaje enviado con éxito!',
-        message: 'Gracias por escribir. Me pondré en contacto contigo a la brevedad.',
-        type: 'success'
-      });
-    } catch {
-      setToast({
-        show: true,
-        title: 'Error al enviar',
-        message: 'Hubo un problema al enviar tu mensaje. Inténtalo de nuevo.',
-        type: 'error'
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    if (toast.show) {
-      const timer = setTimeout(() => {
-        setToast((prev) => ({ ...prev, show: false }));
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast.show]);
 
   return (
     <div className="page-shell">
@@ -498,7 +426,7 @@ function App() {
           </div>
         </motion.section>
 
-        {/* Contact Section */}
+        {/* Contact Showcase Section */}
         <motion.section
           id="contacto"
           initial="hidden"
@@ -507,192 +435,127 @@ function App() {
           variants={fadeInUp}
         >
           <div className="container">
-            <div className="section-header">
-              <span className="eyebrow-badge">
-                <Mail size={14} /> Contacto
-              </span>
-              <h2>Hablemos de tu próximo proyecto o vacante</h2>
-              <p>Disponible para posiciones de Software Engineer, Backend / Frontend y proyectos a medida.</p>
-            </div>
+            <div className="contact-showcase">
+              <div className="contact-main">
+                <span className="contact-year-badge">{currentYear}</span>
+                <h2 className="contact-hero-title">
+                  ¿Buscas fortalecer <br />
+                  <span className="highlight">tu equipo de desarrollo?</span>
+                </h2>
+                <p className="contact-hero-desc">
+                  Estoy en búsqueda activa de oportunidades profesionales donde pueda aportar mi experiencia en arquitecturas escalables, desarrollo backend y desarrollo frontend. Listo para integrarme a tu equipo y generar impacto desde el primer día.
+                </p>
 
-            <div className="contact-grid">
-              <div className="contact-card">
-                <p>Puedes contactarme de forma directa a través de cualquiera de estos canales:</p>
-                <ul className="contact-list">
-                  <li>
-                    <div className="icon-wrapper">
-                      <Mail size={19} />
+                <div className="contact-info-pills">
+                  <div className="contact-info-item">
+                    <div className="contact-info-icon">
+                      <Mail size={20} />
                     </div>
-                    <a href="mailto:contrerashug0447@gmail.com">
-                      contrerashug0447@gmail.com
-                    </a>
-                  </li>
-                  <li>
-                    <div className="icon-wrapper">
-                      <Phone size={19} />
+                    <div className="contact-info-text">
+                      <span className="contact-info-label">Correo Electrónico</span>
+                      <a href="mailto:contrerashug0447@gmail.com" className="contact-info-val">
+                        contrerashug0447@gmail.com
+                      </a>
                     </div>
-                    <a href="tel:+584126754787">+58 412 6754787</a>
-                  </li>
-                  <li>
-                    <div className="icon-wrapper">
-                      <MapPin size={19} />
+                  </div>
+
+                  <div className="contact-info-item">
+                    <div className="contact-info-icon">
+                      <MapPin size={20} />
                     </div>
-                    <span>Maracaibo, Venezuela</span>
-                  </li>
-                  <li>
-                    <div className="icon-wrapper">
-                      <svg
-                        width="19"
-                        height="19"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                        <rect x="2" y="9" width="4" height="12" />
-                        <circle cx="4" cy="4" r="2" />
-                      </svg>
+                    <div className="contact-info-text">
+                      <span className="contact-info-label">Ubicación</span>
+                      <span className="contact-info-val">Maracaibo, Venezuela</span>
                     </div>
-                    <a
-                      href="https://www.linkedin.com/in/hugo-santiago-contreras-ortega-5030033ab/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                    >
-                      <span>LinkedIn / Hugo Santiago Contreras</span>
-                      <ExternalLink size={14} style={{ opacity: 0.7 }} />
-                    </a>
-                  </li>
-                  <li>
-                    <div className="icon-wrapper">
-                      <svg
-                        width="19"
-                        height="19"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                      </svg>
-                    </div>
-                    <a
-                      href="https://github.com/Hcontreras26"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                    >
-                      <span>GitHub / Hcontreras26</span>
-                      <ExternalLink size={14} style={{ opacity: 0.7 }} />
-                    </a>
-                  </li>
-                </ul>
+                  </div>
+                </div>
               </div>
 
-              <div className="contact-card">
-                <form onSubmit={handleFormSubmit}>
-                  <div className="form-group">
-                    <label htmlFor="name">Nombre completo</label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      placeholder="Tu nombre o empresa"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
+              <div className="contact-actions-side">
+                <motion.a
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  href="https://wa.me/584126754787?text=Hola%20Hugo,%20estuve%20revisando%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20agendar%20una%20entrevista."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-schedule"
+                >
+                  <Calendar size={20} />
+                  <span>Agendar Entrevista</span>
+                </motion.a>
 
-                  <div className="form-group">
-                    <label htmlFor="email">Correo electrónico</label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="tu@correo.com"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="message">Mensaje</label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      placeholder="Cuéntame sobre tu proyecto, propuesta u oportunidad laboral..."
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required
-                      disabled={isSubmitting}
-                    ></textarea>
-                  </div>
-
-                  <motion.button
-                    whileTap={!isSubmitting ? { scale: 0.98 } : {}}
-                    whileHover={!isSubmitting ? { scale: 1.02 } : {}}
-                    type="submit"
-                    className="btn btn-primary"
-                    disabled={isSubmitting}
-                    style={{ width: '100%', marginTop: '0.5rem' }}
+                <div className="contact-social-row">
+                  {/* GitHub */}
+                  <motion.a
+                    whileHover={{ scale: 1.15, y: -3 }}
+                    whileTap={{ scale: 0.9 }}
+                    href="https://github.com/Hcontreras26"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-circle-btn"
+                    title="GitHub / Hcontreras26"
+                    aria-label="GitHub"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 size={19} className="spin-icon" />
-                        <span>Enviando mensaje...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send size={18} />
-                        <span>Enviar mensaje</span>
-                      </>
-                    )}
-                  </motion.button>
-                </form>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                    </svg>
+                  </motion.a>
+
+                  {/* LinkedIn */}
+                  <motion.a
+                    whileHover={{ scale: 1.15, y: -3 }}
+                    whileTap={{ scale: 0.9 }}
+                    href="https://www.linkedin.com/in/hugo-santiago-contreras-ortega-5030033ab/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-circle-btn"
+                    title="LinkedIn / Hugo Santiago Contreras"
+                    aria-label="LinkedIn"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect x="2" y="9" width="4" height="12" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                  </motion.a>
+
+                  {/* WhatsApp */}
+                  <motion.a
+                    whileHover={{ scale: 1.15, y: -3 }}
+                    whileTap={{ scale: 0.9 }}
+                    href="https://wa.me/584126754787?text=Hola%20Hugo,%20estuve%20revisando%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20conversar%20contigo."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="social-circle-btn"
+                    title="WhatsApp / +58 412 6754787"
+                    aria-label="WhatsApp"
+                  >
+                    <MessageCircle size={20} />
+                  </motion.a>
+                </div>
               </div>
             </div>
           </div>
         </motion.section>
       </main>
-
-      {/* Floating Toast Notification */}
-      <AnimatePresence>
-        {toast.show && (
-          <div className="toast-container">
-            <motion.div
-              className="toast"
-              initial={{ opacity: 0, y: 30, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <div className="toast-icon">
-                <CheckCircle2 size={24} />
-              </div>
-              <div className="toast-content">
-                <div className="toast-title">{toast.title}</div>
-                <div className="toast-message">{toast.message}</div>
-              </div>
-              <button
-                className="toast-close"
-                onClick={() => setToast((prev) => ({ ...prev, show: false }))}
-                aria-label="Cerrar notificación"
-              >
-                <X size={18} />
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* Footer */}
       <footer>
