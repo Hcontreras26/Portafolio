@@ -209,7 +209,7 @@ function App() {
                 <div>ENGINEER</div>
               </motion.div>
 
-              {/* Foreground Cutout Person Stage */}
+              {/* Foreground Cutout Person Stage with Circular Download CV Badge */}
               <motion.div
                 className="hero-person-stage"
                 initial={{ opacity: 0, scale: 0.9, y: 35 }}
@@ -222,40 +222,29 @@ function App() {
                   alt="Hugo Santiago Contreras Ortega - Software Engineer"
                 />
 
-                {/* Circular Rotating Scroll Down Badge */}
-                <a href="#sobre-mi" className="scroll-down-badge" title="Desplazarse hacia abajo">
+                {/* Circular Rotating Download CV Badge */}
+                <motion.a
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.92 }}
+                  href="/assets/cv.pdf"
+                  download="Hugo_Contreras_CV.pdf"
+                  className="scroll-down-badge"
+                  title="Descargar Curriculum Vitae en PDF"
+                  aria-label="Descargar CV en PDF"
+                >
                   <svg viewBox="0 0 100 100" className="scroll-svg-text">
                     <path
                       id="scrollCirclePath"
                       d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
                       fill="none"
                     />
-                    <text fill="currentColor" fontSize="9" fontWeight="800" letterSpacing="2.2">
+                    <text fill="currentColor" fontSize="9.2" fontWeight="800" letterSpacing="2.2">
                       <textPath href="#scrollCirclePath" startOffset="0%">
-                        • SCROLL DOWN • SCROLL DOWN
+                        • DESCARGAR CV • DESCARGAR CV
                       </textPath>
                     </text>
                   </svg>
-                  <ArrowDown size={22} className="scroll-down-icon" />
-                </a>
-              </motion.div>
-
-              {/* Single Exclusive CV Download Button */}
-              <motion.div
-                className="actions"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                <motion.a
-                  whileTap={{ scale: 0.95 }}
-                  href="/assets/cv.pdf"
-                  className="btn-cv-exclusive"
-                  download="Hugo_Contreras_CV.pdf"
-                  title="Descargar Curriculum Vitae en PDF"
-                >
-                  <Download size={20} />
-                  <span>Descargar CV</span>
+                  <Download size={24} className="download-badge-icon" />
                 </motion.a>
               </motion.div>
             </div>
