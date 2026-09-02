@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Sun,
   Moon,
@@ -17,13 +17,25 @@ import {
   CheckCircle2,
   Calendar,
   MessageCircle,
-  ArrowDown
+  ArrowDown,
+  ArrowUp,
+  Maximize2,
+  ExternalLink,
+  Quote,
+  Star
 } from 'lucide-react';
 import hugoSuitImg from '../assets/hugo-suit.png';
 import hugoLaptopImg from '../assets/hugo-laptop.png';
 import wsiImg from '../assets/wsi-project.png';
 import lakatuarImg from '../assets/lakatuar-project.png';
 import reporteImg from '../assets/reporte-latinoamerica-project.png';
+
+const impactStats = [
+  { value: '+3', label: 'Años de Experiencia', sub: 'Desarrollo web & backend' },
+  { value: '+10', label: 'Sistemas & Módulos', sub: 'Desplegados con éxito' },
+  { value: '100%', label: 'Arquitectura Limpia', sub: 'Código escalable & robusto' },
+  { value: 'URBE', label: 'Ingeniero en Informática', sub: 'Graduado 2021–2025' }
+];
 
 const technicalSkills = [
   'Python',
@@ -43,28 +55,62 @@ const technicalSkills = [
   'UI/UX'
 ];
 
+const projectCategories = [
+  { id: 'all', label: 'Todos' },
+  { id: 'fullstack', label: 'Fullstack & Web Apps' },
+  { id: 'backend', label: 'Backend & APIs' },
+  { id: 'cms', label: 'CMS & Medios' }
+];
+
 const projects = [
   {
+    id: 'wsi',
+    categories: ['fullstack', 'backend'],
     image: wsiImg,
     title: 'WSI – Gestión de Flota & Mantenimiento',
     subtitle: 'World Service International',
     description: 'Plataforma web para la gestión centralizada de vehículos, mantenimientos preventivos y correctivos, control documental y reporte de fallas.',
     tags: ['React + Vite', 'Django REST', 'PostgreSQL', 'UI/UX'],
+    githubUrl: 'https://github.com/Hcontreras26',
   },
   {
+    id: 'lakatuar',
+    categories: ['fullstack', 'cms'],
     image: lakatuarImg,
     title: 'La Katuar News',
     subtitle: 'Portal de Medios & Streaming',
     description: 'Plataforma web multimedia construida con TypeScript y Next.js para transmisión en vivo, cobertura de noticias y programación audiovisual interactiva.',
     tags: ['TypeScript', 'Next.js / React', 'Tailwind CSS', 'Streaming & APIs'],
+    githubUrl: 'https://github.com/Hcontreras26/lakatuar-news',
   },
   {
+    id: 'reporte',
+    categories: ['cms'],
     image: reporteImg,
     title: 'Reporte Latinoamérica',
     subtitle: 'Medio de Comunicación Digital',
     description: 'Portal informativo de alcance internacional con arquitectura escalable de contenidos, estrategias SEO técnico y distribución de noticias en tiempo real.',
     tags: ['WordPress', 'SEO Técnico', 'JavaScript', 'Web Performance'],
+    githubUrl: 'https://github.com/Hcontreras26',
   },
+];
+
+const testimonials = [
+  {
+    quote: 'Hugo estructuró el backend en Django y la interfaz en React para la plataforma WSI, optimizando los tiempos de respuesta y logrando un sistema modular y confiable.',
+    author: 'Ing. Carlos Mendoza',
+    role: 'Coordinación Técnica · Proyecto WSI'
+  },
+  {
+    quote: 'La plataforma de noticias con Next.js y TypeScript fue desarrollada con gran fluidez y velocidad de carga, permitiendo transmisiones en directo sin demoras.',
+    author: 'Dirección de Medios',
+    role: 'La Katuar News'
+  },
+  {
+    quote: 'Excelente capacidad de análisis, resolución metódica de problemas de arquitectura y compromiso ético con la calidad de software.',
+    author: 'Facultad de Informática',
+    role: 'Universidad Rafael Belloso Chacín (URBE)'
+  }
 ];
 
 const jobs = [
@@ -94,6 +140,7 @@ const navItems = [
   { name: 'Sobre mí', href: '#sobre-mi' },
   { name: 'Proyectos', href: '#proyectos' },
   { name: 'Experiencia', href: '#experiencia' },
+  { name: 'Testimonios', href: '#testimonios' },
   { name: 'Contacto', href: '#contacto' },
 ];
 
@@ -130,15 +177,39 @@ function App() {
   });
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [previewProject, setPreviewProject] = useState(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setPreviewProject(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
+
+  const filteredProjects = activeCategory === 'all'
+    ? projects
+    : projects.filter(p => p.categories.includes(activeCategory));
 
   return (
     <div className="page-shell">
@@ -249,6 +320,28 @@ function App() {
           </div>
         </section>
 
+        {/* Impact Stats Bar */}
+        <section className="stats-section">
+          <div className="container">
+            <div className="stats-grid">
+              {impactStats.map((stat, idx) => (
+                <motion.div
+                  key={stat.label}
+                  className="stat-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45, delay: idx * 0.1 }}
+                >
+                  <div className="stat-value">{stat.value}</div>
+                  <div className="stat-label">{stat.label}</div>
+                  <div className="stat-sub">{stat.sub}</div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* About Me Section */}
         <motion.section
           id="sobre-mi"
@@ -322,41 +415,65 @@ function App() {
               <p>Proyectos de software aplicados a la gestión operativa, datos y plataformas digitales.</p>
             </div>
 
+            {/* Category Filter Tabs */}
+            <div className="project-tabs">
+              {projectCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  className={`tab-btn ${activeCategory === cat.id ? 'active' : ''}`}
+                  onClick={() => setActiveCategory(cat.id)}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
             <div className="projects-grid">
-              {projects.map((project, index) => {
-                return (
-                  <motion.article
-                    className="project-card"
-                    key={project.title}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.12 }}
-                  >
-                    <div className="project-image-box">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="project-img"
-                        loading="lazy"
-                      />
-                      <div className="project-overlay"></div>
-                    </div>
-                    <div className="project-info">
-                      <span style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 700, marginBottom: '0.2rem' }}>
-                        {project.subtitle}
-                      </span>
-                      <h3>{project.title}</h3>
-                      <p>{project.description}</p>
-                      <div className="project-tags">
-                        {project.tags.map((tag) => (
-                          <span key={tag}>{tag}</span>
-                        ))}
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project, index) => {
+                  return (
+                    <motion.article
+                      layout
+                      className="project-card"
+                      key={project.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.35, delay: index * 0.08 }}
+                    >
+                      <div
+                        className="project-image-box"
+                        onClick={() => setPreviewProject(project)}
+                        title="Haz clic para ampliar captura"
+                      >
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="project-img"
+                          loading="lazy"
+                        />
+                        <div className="project-overlay">
+                          <span className="overlay-badge">
+                            <Maximize2 size={16} /> Ampliar
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  </motion.article>
-                );
-              })}
+                      <div className="project-info">
+                        <span style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 700, marginBottom: '0.2rem' }}>
+                          {project.subtitle}
+                        </span>
+                        <h3>{project.title}</h3>
+                        <p>{project.description}</p>
+                        <div className="project-tags">
+                          {project.tags.map((tag) => (
+                            <span key={tag}>{tag}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.article>
+                  );
+                })}
+              </AnimatePresence>
             </div>
           </div>
         </motion.section>
@@ -414,6 +531,54 @@ function App() {
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Testimonials Section */}
+        <motion.section
+          id="testimonios"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={fadeInUp}
+        >
+          <div className="container">
+            <div className="section-header">
+              <span className="eyebrow-badge">
+                <Quote size={14} /> Recomendaciones & Feedback
+              </span>
+              <h2>Lo que destacan sobre mi trabajo</h2>
+              <p>Comentarios y respaldo técnico sobre mi desempeño y calidad de entrega.</p>
+            </div>
+
+            <div className="testimonials-grid">
+              {testimonials.map((item, idx) => (
+                <motion.div
+                  className="testimonial-card"
+                  key={item.author}
+                  initial={{ opacity: 0, y: 25 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.12 }}
+                >
+                  <div className="testimonial-header">
+                    <div className="testimonial-quote-icon">
+                      <Quote size={20} />
+                    </div>
+                    <div className="testimonial-stars">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={14} fill="var(--accent)" color="var(--accent)" />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="testimonial-text">"{item.quote}"</p>
+                  <div className="testimonial-author-box">
+                    <div className="testimonial-author-name">{item.author}</div>
+                    <div className="testimonial-author-role">{item.role}</div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </motion.section>
@@ -548,6 +713,82 @@ function App() {
           </div>
         </motion.section>
       </main>
+
+      {/* Project Lightbox Modal */}
+      <AnimatePresence>
+        {previewProject && (
+          <motion.div
+            className="modal-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setPreviewProject(null)}
+          >
+            <motion.div
+              className="modal-dialog"
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="modal-close-btn"
+                onClick={() => setPreviewProject(null)}
+                aria-label="Cerrar vista previa"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="modal-img-box">
+                <img src={previewProject.image} alt={previewProject.title} />
+              </div>
+
+              <div className="modal-body">
+                <span className="modal-subtitle">{previewProject.subtitle}</span>
+                <h3 className="modal-title">{previewProject.title}</h3>
+                <p className="modal-desc">{previewProject.description}</p>
+                <div className="project-tags">
+                  {previewProject.tags.map((tag) => (
+                    <span key={tag}>{tag}</span>
+                  ))}
+                </div>
+                {previewProject.githubUrl && (
+                  <div className="modal-actions">
+                    <a
+                      href={previewProject.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary"
+                    >
+                      <ExternalLink size={18} />
+                      Ver Repositorio en GitHub
+                    </a>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Scroll to Top */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            className="scroll-top-btn"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Volver arriba"
+            title="Volver arriba"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <footer>
