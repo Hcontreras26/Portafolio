@@ -242,111 +242,188 @@ section {
 
 /* Hero Section */
 .hero {
-  min-height: 88vh;
+  min-height: 92vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   background: var(--hero-bg);
   position: relative;
-  padding-top: 3.5rem;
-  padding-bottom: 4rem;
+  padding: 3rem 0 4.5rem 0;
+  overflow: hidden;
 }
 
-.hero-banner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 2rem;
-}
-
-.hero-text {
+.hero-composition {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
-.eyebrow-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.4rem 1rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--primary);
-  background: rgba(var(--primary-rgb), 0.1);
-  border: 1px solid rgba(var(--primary-rgb), 0.25);
-  margin-bottom: 1.25rem;
-  box-shadow: 0 2px 10px rgba(var(--primary-rgb), 0.08);
-}
-
-.hero-text h1 {
+.hero-background-title {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(3.5rem, 8vw, 9.5rem);
-  line-height: 0.88;
-  letter-spacing: -0.06em;
-  margin: 0;
-  color: var(--hero-heading);
   font-weight: 900;
+  font-size: clamp(3.2rem, 8.5vw, 8.8rem);
+  line-height: 0.95;
+  text-align: center;
   text-transform: uppercase;
+  letter-spacing: -0.04em;
+  color: var(--hero-heading);
+  user-select: none;
+  z-index: 1;
+  position: relative;
 }
 
-.hero-text h1 span.highlight {
+.hero-background-title .software-highlight {
+  color: var(--primary);
   background: linear-gradient(135deg, var(--primary), var(--accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.name-line {
-  display: block;
-  font-size: clamp(1.8rem, 3.2vw, 3.5rem);
-  letter-spacing: -0.04em;
-  margin-bottom: 0.75rem;
-  color: var(--text-secondary);
-  font-weight: 700;
-  text-transform: none;
-}
-
-.photo-wrap {
+.hero-person-stage {
   position: relative;
+  z-index: 2;
+  margin-top: -3.8rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: min(520px, 85vw);
+  justify-content: center;
 }
 
-.photo-wrap::before {
+.hero-suit-photo {
+  width: min(540px, 88vw);
+  height: auto;
+  max-height: 58vh;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.3));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-suit-photo:hover {
+  transform: scale(1.02);
+}
+
+/* Circular Scroll Down Badge */
+.scroll-down-badge {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow), var(--shadow-glow);
+  cursor: pointer;
+  z-index: 4;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-down-badge:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--primary);
+  transform: translateX(-50%) scale(1.08);
+  box-shadow: 0 10px 30px -5px rgba(var(--primary-rgb), 0.4), var(--shadow-glow);
+}
+
+.scroll-svg-text {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: rotateText 14s linear infinite;
+  color: var(--muted);
+}
+
+@keyframes rotateText {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.scroll-down-icon {
+  color: var(--primary);
+  animation: bounceDown 2s ease-in-out infinite;
+}
+
+@keyframes bounceDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+/* Premium Download CV Button */
+.btn-cv-exclusive {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2.6rem;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #ffffff;
+  box-shadow: 0 12px 30px -5px rgba(var(--primary-rgb), 0.5), var(--shadow-glow);
+  text-decoration: none;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 1.5rem;
+  z-index: 3;
+}
+
+.btn-cv-exclusive::before {
   content: '';
   position: absolute;
-  inset: -12px;
-  border-radius: 28px 28px 12px 12px;
-  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.35), rgba(var(--accent-rgb), 0.2));
-  filter: blur(16px);
-  z-index: 0;
-  opacity: 0.7;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: all 0.6s ease;
 }
 
-.profile-photo {
-  position: relative;
-  z-index: 1;
-  width: min(480px, 80vw);
-  height: auto;
-  display: block;
-  border-radius: 24px 24px 8px 8px;
-  object-fit: cover;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
+.btn-cv-exclusive:hover::before {
+  left: 140%;
+}
+
+.btn-cv-exclusive:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 20px 40px -5px rgba(var(--primary-rgb), 0.7), 0 0 30px rgba(var(--primary-rgb), 0.4);
 }
 
 .actions {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.2rem;
-  margin-top: 0.5rem;
+  align-items: center;
+  margin-top: 1rem;
 }
 
 /* Buttons */

@@ -16,9 +16,10 @@ import {
   Layers,
   CheckCircle2,
   Calendar,
-  MessageCircle
+  MessageCircle,
+  ArrowDown
 } from 'lucide-react';
-import hugPhoto from '../assets/Hug.jpg';
+import hugoSuitImg from '../assets/hugo-suit.png';
 import hugoLaptopImg from '../assets/hugo-laptop.png';
 import wsiImg from '../assets/wsi-project.png';
 import lakatuarImg from '../assets/lakatuar-project.png';
@@ -193,67 +194,71 @@ function App() {
       <main>
         {/* Hero Section */}
         <section id="inicio" className="hero">
-          <div className="container hero-banner">
-            <motion.div
-              className="hero-text"
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-            >
-              <motion.div variants={fadeInUp}>
-                <span className="eyebrow-badge">
-                  <Terminal size={14} /> Ingeniero en Informática · Fullstack & Backend
-                </span>
+          <div className="container">
+            <div className="hero-composition">
+              {/* Background Big Typography */}
+              <motion.div
+                className="hero-background-title"
+                initial={{ opacity: 0, y: -25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div>
+                  I'M A <span className="software-highlight">SOFTWARE</span>
+                </div>
+                <div>ENGINEER</div>
               </motion.div>
 
-              <motion.h1 variants={fadeInUp}>
-                <span className="name-line">Hugo Santiago Contreras</span>
-                SOFTWARE <span className="highlight">ENGINEER</span>
-                <br />
-                & DEVELOPER
-              </motion.h1>
-            </motion.div>
-
-            <motion.div
-              className="photo-wrap"
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <img
-                className="profile-photo"
-                src={hugPhoto}
-                alt="Hugo Santiago Contreras Ortega"
-              />
-            </motion.div>
-
-            <motion.div
-              className="actions hero-actions"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="/assets/cv.pdf"
-                className="btn btn-primary"
-                download="Hugo_Contreras_CV.pdf"
-                title="Descargar Curriculum Vitae en PDF"
+              {/* Foreground Cutout Person Stage */}
+              <motion.div
+                className="hero-person-stage"
+                initial={{ opacity: 0, scale: 0.9, y: 35 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
               >
-                <Download size={18} />
-                Descargar CV (PDF)
-              </motion.a>
-              <motion.a
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                href="#proyectos"
-                className="btn btn-secondary"
+                <img
+                  className="hero-suit-photo"
+                  src={hugoSuitImg}
+                  alt="Hugo Santiago Contreras Ortega - Software Engineer"
+                />
+
+                {/* Circular Rotating Scroll Down Badge */}
+                <a href="#sobre-mi" className="scroll-down-badge" title="Desplazarse hacia abajo">
+                  <svg viewBox="0 0 100 100" className="scroll-svg-text">
+                    <path
+                      id="scrollCirclePath"
+                      d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+                      fill="none"
+                    />
+                    <text fill="currentColor" fontSize="9" fontWeight="800" letterSpacing="2.2">
+                      <textPath href="#scrollCirclePath" startOffset="0%">
+                        • SCROLL DOWN • SCROLL DOWN
+                      </textPath>
+                    </text>
+                  </svg>
+                  <ArrowDown size={22} className="scroll-down-icon" />
+                </a>
+              </motion.div>
+
+              {/* Single Exclusive CV Download Button */}
+              <motion.div
+                className="actions"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
               >
-                <Eye size={18} />
-                Ver proyectos
-              </motion.a>
-            </motion.div>
+                <motion.a
+                  whileTap={{ scale: 0.95 }}
+                  href="/assets/cv.pdf"
+                  className="btn-cv-exclusive"
+                  download="Hugo_Contreras_CV.pdf"
+                  title="Descargar Curriculum Vitae en PDF"
+                >
+                  <Download size={20} />
+                  <span>Descargar CV</span>
+                </motion.a>
+              </motion.div>
+            </div>
           </div>
         </section>
 
